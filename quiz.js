@@ -82,21 +82,36 @@ function nextQuestion() {
   };
 }
 
-function speak(text) {
+function speakBySpeechSynthesis(text) {
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-US';
   utter.rate = 0.9;
-  // 若系統支援 Google US English 可選用較自然的聲音
   const voices = speechSynthesis.getVoices();
   let selectedVoice = voices.find(v => v.name.includes('Google US English'));
-
-  // 如果是 Safari，選擇系統的輔助使用英文語音
   if (!selectedVoice && /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
     selectedVoice = voices.find(v => v.lang === 'en-US' && v.localService);
   }
-
   if (selectedVoice) utter.voice = selectedVoice;
   speechSynthesis.speak(utter);
+}
+
+function speak(text) {
+  // 檢查 mp3/text.mp3 是否存在
+  fetch(`mp3/${text}.mp3`, { method: 'HEAD' })
+    .then(res => {
+      if (res.ok) {
+        // 存在 mp3 檔案，播放音檔
+        const audio = new Audio(`mp3/${text}.mp3`);
+        audio.play();
+      } else {
+        // 不存在，使用語音合成
+        speakBySpeechSynthesis(text);
+      }
+    })
+    .catch(() => {
+      // 發生錯誤時也使用語音合成
+      speakBySpeechSynthesis(text);
+    });
 }
 
 document.getElementById('show-answer-btn').onclick = () => {
