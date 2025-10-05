@@ -88,8 +88,14 @@ function speak(text) {
   utter.rate = 0.9;
   // 若系統支援 Google US English 可選用較自然的聲音
   const voices = speechSynthesis.getVoices();
-  const googleVoice = voices.find(v => v.name.includes('Google US English'));
-  if (googleVoice) utter.voice = googleVoice;
+  let selectedVoice = voices.find(v => v.name.includes('Google US English'));
+
+  // 如果是 Safari，選擇系統的輔助使用英文語音
+  if (!selectedVoice && /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+    selectedVoice = voices.find(v => v.lang === 'en-US' && v.localService);
+  }
+
+  if (selectedVoice) utter.voice = selectedVoice;
   speechSynthesis.speak(utter);
 }
 
