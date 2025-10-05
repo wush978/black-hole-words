@@ -6,9 +6,25 @@
   <title>背單字小幫手</title>
   <script defer src="quiz.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+.firework {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff0, #f00, #0ff, #0f0, #00f, #fff);
+  animation: explode 1.2s ease-out;
+  pointer-events: none;
+}
+@keyframes explode {
+  0% { transform: scale(0.5) opacity: 1; }
+  80% { transform: scale(2.5) opacity: 1; }
+  100% { transform: scale(3) opacity: 0; }
+}
+</style>
 </head>
 <body class="bg-blue-50 flex flex-col items-center justify-center min-h-screen text-gray-800">
-  <h1 class="text-3xl font-bold mb-6">🎧 聽音背單字 v0.2.1</h1>
+  <h1 class="text-3xl font-bold mb-6">🎧 聽音背單字 v0.2.2</h1>
 
   <div id="unit-selector" class="text-center">
     <p class="mb-3">請選擇要背的單元：</p>
@@ -31,8 +47,10 @@
     <ul id="wrong-words-list" class="list-disc list-inside text-lg"></ul>
     <button id="review-wrong-btn" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg mt-4">複習錯誤單字</button>
   </div>
-  <div id="congrat-all-correct" class="hidden text-green-600 text-lg font-semibold mt-4">
+  <div id="congrat-all-correct" class="hidden text-green-600 text-lg font-semibold mt-4 relative">
     <h2 class="text-xl font-bold mb-2">恭喜！全部答對！🎉</h2>
+    <div id="firework-animation" class="absolute inset-0 pointer-events-none"></div>
   </div>
+  <audio id="firework-audio" src="explosion-3-386885.mp3"></audio>
 </body>
 </html>

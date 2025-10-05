@@ -47,6 +47,19 @@ function reviewWrongWords() {
   startQuiz(words);
 }
 
+function showFirework() {
+  const container = document.getElementById('firework-animation');
+  container.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const fw = document.createElement('div');
+    fw.className = 'firework';
+    fw.style.left = Math.random() * 90 + '%';
+    fw.style.top = Math.random() * 60 + '%';
+    container.appendChild(fw);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 2000);
+}
+
 function finishUnit() {
   // 顯示錯誤單字
   const wrongArea = document.getElementById('wrong-words-area');
@@ -57,6 +70,8 @@ function finishUnit() {
     // 全部答對
     congratAllCorrect.classList.remove('hidden');
     wrongArea.classList.add('hidden');
+    document.getElementById('firework-audio').play();
+    showFirework();
   } else {
     // 有答錯
     wrongWords.forEach(word => {
