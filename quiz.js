@@ -20,8 +20,7 @@ function showUnitSelector() {
   });
 }
 
-function startUnit(unitName) {
-  words = [...allUnits[unitName]]; // 複製一份
+function startQuiz(words) {
   // Fisher-Yates 洗牌
   for (let i = words.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -33,20 +32,42 @@ function startUnit(unitName) {
   document.getElementById('quiz-area').classList.remove('hidden');
   // 隱藏錯誤單字
   document.getElementById('wrong-words-area').classList.add('hidden');
+  document.getElementById('congrat-all-correct').classList.add('hidden');
   nextQuestion();
+}
+
+function startUnit(unitName) {
+  words = [...allUnits[unitName]]; // 複製一份
+  startQuiz(words);
+}
+
+function reviewWrongWords() {
+  if (wrongWords.size === 0) return;
+  words = Array.from(wrongWords);
+  startQuiz(words);
 }
 
 function finishUnit() {
   // 顯示錯誤單字
   const wrongArea = document.getElementById('wrong-words-area');
   const wrongList = document.getElementById('wrong-words-list');
+  const congratAllCorrect = document.getElementById('congrat-all-correct');
   wrongList.innerHTML = '';
-  wrongWords.forEach(word => {
-    const li = document.createElement('li');
-    li.textContent = `${word.en} - ${word.zh}`;
-    wrongList.appendChild(li);
-  });
-  wrongArea.classList.remove('hidden');
+  if (wrongWords.size === 0) {
+    // 全部答對
+    congratAllCorrect.classList.remove('hidden');
+    wrongArea.classList.add('hidden');
+  } else {
+    // 有答錯
+    wrongWords.forEach(word => {
+      const li = document.createElement('li');
+      li.textContent = `${word.en} - ${word.zh}`;
+      wrongList.appendChild(li);
+    });
+    document.getElementById('review-wrong-btn').onclick = reviewWrongWords;
+    congratAllCorrect.classList.add('hidden');
+    wrongArea.classList.remove('hidden');
+  }
   document.getElementById('quiz-area').classList.add('hidden');
   document.getElementById('unit-selector').classList.remove('hidden');
   return;

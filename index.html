@@ -8,11 +8,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-blue-50 flex flex-col items-center justify-center min-h-screen text-gray-800">
-  <h1 class="text-3xl font-bold mb-6">🎧 聽音背單字 v0.2</h1>
+  <h1 class="text-3xl font-bold mb-6">🎧 聽音背單字 v0.2.1</h1>
 
   <div id="unit-selector" class="text-center">
     <p class="mb-3">請選擇要背的單元：</p>
-    <div id="unit-buttons" class="flex flex-wrap gap-3 justify-center"></div>
+    <div id="unit-buttons" class="flex flex-wrap gap-x-4 gap-y-3 justify-center"></div>
   </div>
 
   <div id="quiz-area" class="hidden text-center">
@@ -29,6 +29,10 @@
   <div id="wrong-words-area" class="hidden mt-8 text-center">
     <h2 class="text-xl font-bold mb-2">你答錯的單字：</h2>
     <ul id="wrong-words-list" class="list-disc list-inside text-lg"></ul>
+    <button id="review-wrong-btn" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg mt-4">複習錯誤單字</button>
+  </div>
+  <div id="congrat-all-correct" class="hidden text-green-600 text-lg font-semibold mt-4">
+    <h2 class="text-xl font-bold mb-2">恭喜！全部答對！🎉</h2>
   </div>
 </body>
 </html>
