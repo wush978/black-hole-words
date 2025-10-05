@@ -1,78 +1,79 @@
+let allUnits = {};
 let words = [];
-let currentWord = null;
+let current = 0;
 let wrongWords = [];
 
-fetch('words.json')
-  .then(res => res.json())
-  .then(data => {
-    words = data;
-    nextQuestion();
+async function loadWords() {
+  const res = await fetch('words.json');
+  allUnits = await res.json();
+  showUnitSelector();
+}
+
+function showUnitSelector() {
+  const container = document.getElementById('unit-buttons');
+  Object.keys(allUnits).forEach(unit => {
+    const btn = document.createElement('button');
+    btn.textContent = unit;
+    btn.className = "bg-white border border-blue-300 px-4 py-2 rounded-lg hover:bg-blue-100";
+    btn.onclick = () => startUnit(unit);
+    container.appendChild(btn);
   });
-
-function getRandomWord() {
-  const index = Math.floor(Math.random() * words.length);
-  const word = words[index];
-  const showChinese = Math.random() < 0.5;
-  return { ...word, showChinese };
 }
 
-// 播放英文語音
-function speakWord(word) {
-  if (!word) return;
-
-  // ✅ 若你想改用 ResponsiveVoice
-  if (window.responsiveVoice) {
-    responsiveVoice.speak(word, "US English Female");
-  } else {
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    speechSynthesis.speak(utterance);
-  }
-}
-
-function showQuestion(wordObj) {
-  currentWord = wordObj;
-  const qDiv = document.getElementById('question');
-  const aDiv = document.getElementById('answer');
-  const repeatBtn = document.getElementById('repeatBtn');
-  aDiv.innerText = '';
-
-  if (wordObj.showChinese) {
-    qDiv.innerText = wordObj.zh;
-    repeatBtn.style.display = 'none';
-  } else {
-    qDiv.innerText = "🔊 聽音辨字";
-    repeatBtn.style.display = 'inline-block';
-    speakWord(wordObj.en);
-  }
-}
-
-function revealAnswer() {
-  if (!currentWord) return;
-  document.getElementById('answer').innerText = `${currentWord.en} - ${currentWord.zh}`;
-  speakWord(currentWord.en);
+function startUnit(unitName) {
+  words = allUnits[unitName];
+  current = 0;
+  wrongWords = [];
+  document.getElementById('unit-selector').classList.add('hidden');
+  document.getElementById('quiz-area').classList.remove('hidden');
+  nextQuestion();
 }
 
 function nextQuestion() {
-  const wordObj = getRandomWord();
-  showQuestion(wordObj);
+  if (words.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * words.length);
+  const word = words[randomIndex];
+  current = randomIndex;
+
+  // 出題：只顯示中文意思 + 播放英文語音
+  document.getElementById('question').textContent = word.zh;
+  speak(word.en);
+
+  document.getElementById('answer').classList.add('hidden');
+  document.getElementById('show-answer-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('mark-wrong-btn').classList.add('hidden');
+
+  document.getElementById('replay-btn').onclick = () => speak(word.en);
 }
 
-function recordWrongWord() {
-  if (!currentWord) return;
-  if (!wrongWords.some(w => w.en === currentWord.en)) {
-    wrongWords.push({ en: currentWord.en, zh: currentWord.zh });
-    alert(`已紀錄錯誤單字: ${currentWord.en} - ${currentWord.zh}`);
-  } else {
-    alert(`單字已在錯誤清單中: ${currentWord.en}`);
-  }
-  console.log('錯誤單字清單:', wrongWords);
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.9;
+  // 若系統支援 Google US English 可選用較自然的聲音
+  const voices = speechSynthesis.getVoices();
+  const googleVoice = voices.find(v => v.name.includes('Google US English'));
+  if (googleVoice) utter.voice = googleVoice;
+  speechSynthesis.speak(utter);
 }
 
-// 綁定按鈕事件
-document.getElementById('checkBtn').addEventListener('click', revealAnswer);
-document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-document.getElementById('wrongBtn').addEventListener('click', recordWrongWord);
-document.getElementById('repeatBtn').addEventListener('click', () => {
-  if (currentWord && !currentWord.showChinese) speakWord(currentWord.en);
-});
+document.getElementById('show-answer-btn').onclick = () => {
+  const word = words[current];
+  document.getElementById('answer').innerHTML = `<b>${word.en}</b> - ${word.zh}`;
+  document.getElementById('answer').classList.remove('hidden');
+  document.getElementById('show-answer-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('mark-wrong-btn').classList.remove('hidden');
+};
+
+document.getElementById('next-btn').onclick = nextQuestion;
+
+document.getElementById('mark-wrong-btn').onclick = () => {
+  const word = words[current];
+  wrongWords.push(word);
+  alert(`已紀錄錯誤：${word.en}`);
+  nextQuestion();
+};
+
+loadWords();

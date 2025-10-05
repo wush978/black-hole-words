@@ -1,7 +1,12 @@
-[
-  {"en": "apple", "zh": "蘋果"},
-  {"en": "banana", "zh": "香蕉"},
-  {"en": "orange", "zh": "橘子"},
-  {"en": "grape", "zh": "葡萄"},
-  {"en": "strawberry", "zh": "草莓"}
-]
+{
+  "Week 1": [
+    { "en": "apple", "zh": "蘋果" },
+    { "en": "banana", "zh": "香蕉" },
+    { "en": "orange", "zh": "橘子" }
+  ],
+  "Week 2": [
+    { "en": "cat", "zh": "貓" },
+    { "en": "dog", "zh": "狗" },
+    { "en": "bird", "zh": "鳥" }
+  ]
+}

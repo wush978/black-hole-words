@@ -1,35 +1,29 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>背單字小遊戲</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 40px; text-align: center; }
-    #question { font-size: 2em; margin-bottom: 20px; }
-    #answer { font-size: 1.5em; margin-top: 10px; color: green; }
-    button { margin: 10px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
-    #repeatBtn { display: none; } /* 預設隱藏 */
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>背單字小幫手</title>
+  <script defer src="quiz.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>背單字小遊戲</h1>
-  <div id="question">載入中...</div>
+<body class="bg-blue-50 flex flex-col items-center justify-center min-h-screen text-gray-800">
+  <h1 class="text-3xl font-bold mb-6">🎧 聽音背單字</h1>
 
-  <div>
-    <button id="repeatBtn">🔊 重聽一次</button>
+  <div id="unit-selector" class="text-center">
+    <p class="mb-3">請選擇要背的單元：</p>
+    <div id="unit-buttons" class="flex flex-wrap gap-3 justify-center"></div>
   </div>
 
-  <div>
-    <button id="checkBtn">對答案</button>
-    <button id="wrongBtn">紀錄錯誤單字</button>
+  <div id="quiz-area" class="hidden text-center">
+    <p id="question" class="text-2xl mb-4"></p>
+    <button id="replay-btn" class="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 rounded-lg mb-4">🔁 重聽一次</button>
+    <div id="answer" class="hidden text-xl mb-4"></div>
+    <div class="flex justify-center gap-3">
+      <button id="show-answer-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">對答案</button>
+      <button id="next-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg hidden">下一題</button>
+      <button id="mark-wrong-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg hidden">紀錄錯誤的單字</button>
+    </div>
   </div>
-
-  <div id="answer"></div>
-  <button id="nextBtn">下一題</button>
-
-  <!-- 建議：如果要用更自然語音，可加上 ResponsiveVoice -->
-  <!-- <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY"></script> -->
-
-  <script src="quiz.js"></script>
 </body>
 </html>
