@@ -99,6 +99,7 @@ function updateQuestionUI(showChinese, word) {
     questionEl.classList.add('hidden');
     questionEl.textContent = '';
     replayBtn.classList.remove('hidden');
+    speak(word.en);
   }
 }
 
@@ -174,7 +175,40 @@ document.getElementById('next-btn').onclick = nextQuestion;
 document.getElementById('mark-wrong-btn').onclick = () => {
   const word = words[current];
   wrongWords.add(word);
-  nextQuestion();
+
+  // 顯示答案
+  document.getElementById('answer').innerHTML = `<b>${word.en}</b> - ${word.zh}`;
+  document.getElementById('answer').classList.remove('hidden');
+  document.getElementById('show-answer-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('mark-wrong-btn').classList.add('hidden');
+
+  // 插入提示要背誦三遍
+  let memorizeTip = document.getElementById('memorize-tip');
+  if (!memorizeTip) {
+    memorizeTip = document.createElement('div');
+    memorizeTip.id = 'memorize-tip';
+    memorizeTip.className = 'text-red-600 text-lg font-bold mt-4';
+    document.getElementById('quiz-area').appendChild(memorizeTip);
+  }
+  memorizeTip.textContent = '請大聲背誦這個單字三遍！';
+
+  // 插入「我已經背誦三遍」按鈕
+  let memorizeBtn = document.getElementById('memorize-next-btn');
+  if (!memorizeBtn) {
+    memorizeBtn = document.createElement('button');
+    memorizeBtn.id = 'memorize-next-btn';
+    memorizeBtn.className = 'bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg mt-4';
+    memorizeBtn.textContent = '我已經背誦三遍，進入下一題';
+    memorizeBtn.onclick = () => {
+      memorizeTip.textContent = '';
+      memorizeBtn.remove();
+      nextQuestion();
+    };
+    document.getElementById('quiz-area').appendChild(memorizeBtn);
+  } else {
+    memorizeBtn.classList.remove('hidden');
+  }
 };
 
 loadWords();
