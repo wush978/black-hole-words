@@ -168,6 +168,20 @@ document.getElementById('show-answer-btn').onclick = () => {
   document.getElementById('next-btn').classList.remove('hidden');
   document.getElementById('mark-wrong-btn').classList.remove('hidden');
   speak(word.en);
+
+  // 加入重聽聲音按鈕
+  let replayAnswerBtn = document.getElementById('replay-answer-btn');
+  if (!replayAnswerBtn) {
+    replayAnswerBtn = document.createElement('button');
+    replayAnswerBtn.id = 'replay-answer-btn';
+    replayAnswerBtn.className = 'bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 rounded-lg mt-3 ml-2';
+    replayAnswerBtn.textContent = '🔁 重聽單字';
+    replayAnswerBtn.onclick = () => speak(word.en);
+    document.getElementById('answer').appendChild(replayAnswerBtn);
+  } else {
+    replayAnswerBtn.onclick = () => speak(word.en);
+    replayAnswerBtn.classList.remove('hidden');
+  }
 };
 
 document.getElementById('next-btn').onclick = nextQuestion;
@@ -193,6 +207,20 @@ document.getElementById('mark-wrong-btn').onclick = () => {
   }
   memorizeTip.textContent = '請大聲背誦這個單字三遍！';
 
+  // 插入重聽單字按鈕
+  let replayMemorizeBtn = document.getElementById('replay-memorize-btn');
+  if (!replayMemorizeBtn) {
+    replayMemorizeBtn = document.createElement('button');
+    replayMemorizeBtn.id = 'replay-memorize-btn';
+    replayMemorizeBtn.className = 'bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 rounded-lg mt-3 ml-2';
+    replayMemorizeBtn.textContent = '🔁 重聽單字';
+    replayMemorizeBtn.onclick = () => speak(word.en);
+    memorizeTip.appendChild(replayMemorizeBtn);
+  } else {
+    replayMemorizeBtn.onclick = () => speak(word.en);
+    replayMemorizeBtn.classList.remove('hidden');
+  }
+
   // 插入「我已經背誦三遍」按鈕
   let memorizeBtn = document.getElementById('memorize-next-btn');
   if (!memorizeBtn) {
@@ -203,6 +231,7 @@ document.getElementById('mark-wrong-btn').onclick = () => {
     memorizeBtn.onclick = () => {
       memorizeTip.textContent = '';
       memorizeBtn.remove();
+      replayMemorizeBtn.remove();
       nextQuestion();
     };
     document.getElementById('quiz-area').appendChild(memorizeBtn);
