@@ -88,6 +88,20 @@ function finishUnit() {
   return;
 }
 
+function updateQuestionUI(showChinese, word) {
+  const questionEl = document.getElementById('question');
+  const replayBtn = document.getElementById('replay-btn');
+  if (showChinese) {
+    questionEl.classList.remove('hidden');
+    questionEl.textContent = word.zh;
+    replayBtn.classList.add('hidden');
+  } else {
+    questionEl.classList.add('hidden');
+    questionEl.textContent = '';
+    replayBtn.classList.remove('hidden');
+  }
+}
+
 function nextQuestion() {
   current += 1;
   if (words.length === 0) return;
@@ -101,12 +115,7 @@ function nextQuestion() {
   document.getElementById('answer').innerHTML = `<b></b>`;  
   // 出題：只顯示中文意思或播放英文語音
   const showChinese = Math.random() < 0.5;
-  if (showChinese) {
-    document.getElementById('question').textContent = word.zh;
-  } else {
-    document.getElementById('question').textContent = '「聽音」';
-    speak(word.en);
-  }
+  updateQuestionUI(showChinese, word);
 
   document.getElementById('answer').classList.add('hidden');
   document.getElementById('show-answer-btn').classList.remove('hidden');
